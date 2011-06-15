@@ -20,6 +20,7 @@ import java.util.LinkedList;
 
 import com.markupartist.android.widget.actionbar.R;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -289,6 +290,33 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
                 Toast.makeText(mContext,
                         mContext.getText(R.string.actionbar_activity_not_found),
                         Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    
+    /**
+     * IntentAction which uses a custom Back transition rather than 
+     * the default (typically, a forward transition).
+     * 
+     * This is useful when going to the Home screen or using other Intents
+     * which clear the back stack; a forward transition implies that the user
+     * can use the back button to go to the previous screen.
+     */
+    public static class BackIntentAction extends IntentAction {
+        protected Activity mThisActivity = null;
+        
+        public BackIntentAction(Context context, Intent intent, int drawable) {
+            super(context, intent, drawable);
+            if (context instanceof Activity) {
+                mThisActivity = (Activity) context;
+            }
+        }
+        
+        @Override
+        public void performAction(View view) {
+            super.performAction(view);
+            if (mThisActivity != null) {
+                mThisActivity.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
             }
         }
     }
